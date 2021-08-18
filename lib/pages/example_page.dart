@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class ExamplePage extends StatefulWidget {
@@ -10,35 +9,35 @@ class ExamplePage extends StatefulWidget {
 
 class _ExamplePageState extends State<ExamplePage> {
   String message = "Prueba de BD";
-  late  String title;
-  late String stringFutureName="X";
+  late String title;
+  late String stringFutureName = "X";
 
   @override
-  initState(){
+  initState() {
     super.initState();
     //title = "Dragon Ball Super";
     getData();
   }
 
-  String obtenerTitulo(){
+  String obtenerTitulo() {
     return "Prueba de Titulo";
   }
 
-  getData()async{
+  getData() async {
     // stringFutureName = await getFuturuName();
     // setState(() {
     //
     // });
-    getFuturuName().then((value) {
-      stringFutureName = value;
-      setState(() {
-
-      });
-    },);
+    // getFuturuName().then((value) {
+    //   stringFutureName = value;
+    //   setState(() {
+    //
+    //   });
+    // },);
   }
 
-  Future<String> getFuturuName()async{
-    return await Future.delayed(Duration(seconds: 5),(){
+  Future<String> getFuturuName() async {
+    return await Future.delayed(Duration(seconds: 5), () {
       return "Michael Burgos";
     });
   }
@@ -50,7 +49,19 @@ class _ExamplePageState extends State<ExamplePage> {
         title: Text("Example"),
       ),
       body: Center(
-         child: Text(stringFutureName),
+        child: FutureBuilder(
+          future: getFuturuName(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              //si tiene data
+              return Text("Holaaaaa");
+            } else if (snapshot.hasError) {
+              return Text("Ocurrio un Error");
+            } else {
+              return CircularProgressIndicator();
+            }
+          },
+        ),
       ),
     );
   }
