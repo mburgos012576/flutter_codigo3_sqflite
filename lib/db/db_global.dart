@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_codigo3_sqflite/models/libro_model.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -46,32 +47,37 @@ class DBGlobalManager {
   }
 
   //otra forma de listar tabla
-  getAllLibros() async {
+  Future<List> getAllLibros() async {
     final db = await getDatabase;
     final resp = await db!.query("Libro");
     print(resp);
+    return resp; //?? [];  //si es nulo muestra lista vacia
   }
 
   //insertar registros de forma cruda RAW
-  Future<int> insertLibroRow() async {
+  Future<int> insertLibroRaw(Libro data) async {
     final db = await getDatabase;
     final int resp = await db!.rawInsert(
-        "insert into Libro (Id, DescripcionLibro, Autor , urlImage) values (4,'La fiesta del Chivo2','Mario Vargas Llosa','https://imagessl7.casadellibro.com/a/l/t7/77/9788420470177.jpg');");
-    print(resp);
+        "insert into Libro (Id, DescripcionLibro, Autor , urlImage) values ('${data.id}','${data.descripcionLibro}','${data.autor}','${data.urlmage}');");
+    //print(resp);
+    await getAllLibros();
     return resp;
   }
 
   //insertar registros de forma cruda db!.insert
-  insertLibro() async {
+  Future<int> insertLibro(Libro data) async {
     final db = await getDatabase;
-    final resp = await db!.insert("Libro", {
-      "Id": 6,
-      "DescripcionLibro": "La Ciudad y los Perros",
-      "Autor": "Mario Vargas Llosa",
-      "urlImage":
-          "https://imagessl7.casadellibro.com/a/l/t7/77/9788420470177.jpg"
-    });
-    print(resp);
+    final resp = await db!.insert("Libro", data.convertirAMap());
+    // {
+    //   "Id": data.id,
+    //   "DescripcionLibro": data.descripcionLibro,
+    //   "Autor": data.autor,
+    //   "urlImage":data.urlmage
+    // }
+    //);
+    ////print(resp);
+    await getAllLibros();
+    return resp;
   }
 
   //Update tablas

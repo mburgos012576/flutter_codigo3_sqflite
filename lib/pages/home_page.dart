@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_codigo3_sqflite/db/db_global.dart';
+import 'package:flutter_codigo3_sqflite/models/libro_model.dart';
 import 'package:flutter_codigo3_sqflite/widgets/dissmissible_item_widget.dart';
 import 'package:flutter_codigo3_sqflite/widgets/input_dialog_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HomePage extends StatefulWidget {
-
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-
 class _HomePageState extends State<HomePage> {
   @override
-  initState(){
+  initState() {
     super.initState();
     DBGlobalManager.db;
   }
-  showAddModal(BuildContext context) {  //metodo Alerta
+
+  showAddModal(BuildContext context) {
+    //metodo Alerta
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -30,12 +31,22 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SvgPicture.asset('assets/image/add.svg', height: 120,),
-                  InputWidgetDialog(icon: Icons.book,hint:  "Libro"),
-                  SizedBox(height: 10,),
-                  InputWidgetDialog(icon: Icons.person,hint: "Autor"),
-                  SizedBox(height: 10,),
-                  InputWidgetDialog(icon: Icons.image,hint: "Url Portada"),
+                  SvgPicture.asset(
+                    'assets/image/add.svg',
+                    height: 120,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  InputWidgetDialog(icon: Icons.book, hint: "Libro"),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  InputWidgetDialog(icon: Icons.person, hint: "Autor"),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  InputWidgetDialog(icon: Icons.image, hint: "Url Portada"),
                 ],
               ),
             ),
@@ -61,15 +72,25 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: ()async {
           //showAddModal(context);
+          // Libro data = new Libro( //clase para pasar parametros a metodos CRUD
+          //     id: 12,
+          //     descripcionLibro: "Goky",
+          //     autor: "Akira Torillama",
+          //     urlmage:"https://imagessl7.casadellibro.com/a/l/t7/77/9788420470177.jpg");
+          // DBGlobalManager.db.insertLibro(data);
+
+          print(await DBGlobalManager.db.getAllLibros());
           //DBGlobalManager.db.insertLibroRow();
           //DBGlobalManager.db.getAllLibrosRaw();
           //DBGlobalManager.db.getAllLibros();
-          //DBGlobalManager.db.insertLibro();
+
+          //DBGlobalManager.db.insertLibroRaw(data);
           //DBGlobalManager.db.updateLibros();
           //DBGlobalManager.db.deleteLibros();
-          DBGlobalManager.db.updateLibros();
+          //DBGlobalManager.db.updateLibros();
+          //DBGlobalManager.db.getAllLibros();
         },
         child: Icon(Icons.add),
         backgroundColor: Color(0xff212121),
@@ -100,5 +121,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-
