@@ -63,7 +63,13 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           //showAddModal(context);
-          DBGlobalManager.db.insertLibroRow();
+          //DBGlobalManager.db.insertLibroRow();
+          //DBGlobalManager.db.getAllLibrosRaw();
+          //DBGlobalManager.db.getAllLibros();
+          //DBGlobalManager.db.insertLibro();
+          //DBGlobalManager.db.updateLibros();
+          //DBGlobalManager.db.deleteLibros();
+          DBGlobalManager.db.updateLibros();
         },
         child: Icon(Icons.add),
         backgroundColor: Color(0xff212121),
