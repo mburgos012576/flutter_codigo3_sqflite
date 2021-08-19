@@ -1,12 +1,14 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_codigo3_sqflite/db/db_global.dart';
 
 class DissmissibleItemWidget extends StatelessWidget {
   String title;
   String autor;
   String url;
-  DissmissibleItemWidget({required this.title,required this.autor, required this.url});
+  Function? onDelete;
+  Function? onEdit;
+  DissmissibleItemWidget({required this.title,required this.autor, required this.url, this.onDelete, this.onEdit});
+
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,9 @@ class DissmissibleItemWidget extends StatelessWidget {
       direction: DismissDirection.endToStart, //bloquea arrastar de izquierda a derecha
       onDismissed: (DismissDirection direction){
         print("Eliminando....");
+        this.onDelete!();
       },
+
       child: ListTile(
         leading: Container(
           width: 50.0,
@@ -50,7 +54,9 @@ class DissmissibleItemWidget extends StatelessWidget {
                   color: Colors.redAccent,
                   borderRadius: BorderRadius.circular(14.0)),
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  this.onDelete!();
+                },
                 icon: Icon(
                   Icons.delete,
                   color: Colors.white,
@@ -63,7 +69,9 @@ class DissmissibleItemWidget extends StatelessWidget {
                   color: Colors.blueAccent,
                   borderRadius: BorderRadius.circular(14.0)),
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  this.onEdit!();
+                },
                 icon: Icon(
                   Icons.edit,
                   color: Colors.white,

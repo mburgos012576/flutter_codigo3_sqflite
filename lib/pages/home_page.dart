@@ -12,6 +12,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Map<String,dynamic>> misLibros = []; //variable donde alojaremos el resultado de getAllLibros del metodo(getData)
+  TextEditingController _descripcionController = TextEditingController();
+  TextEditingController _autorController = TextEditingController();
+  TextEditingController _imagenController = TextEditingController();
 
   @override
   initState() {
@@ -22,10 +25,13 @@ class _HomePageState extends State<HomePage> {
   getData()async{
     //misLibros = await DBGlobalManager.db.getAllLibros();
     //o esta
-    DBGlobalManager.db.getAllLibros().then((value){
+    await DBGlobalManager.db.getAllLibros().then((value){
       misLibros=value;
     });
-    print(misLibros);
+    setState(() {
+
+    });
+    //print(misLibros);
   }
 
   showAddModal(BuildContext context) {
@@ -49,27 +55,40 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     height: 10,
                   ),
-                  InputWidgetDialog(icon: Icons.book, hint: "Libro"),
+                  InputWidgetDialog(controller: _descripcionController,icon: Icons.book, hint: "Libro"),
                   SizedBox(
                     height: 10,
                   ),
-                  InputWidgetDialog(icon: Icons.person, hint: "Autor"),
+                  InputWidgetDialog(controller: _autorController,icon: Icons.person, hint: "Autor"),
                   SizedBox(
                     height: 10,
                   ),
-                  InputWidgetDialog(icon: Icons.image, hint: "Url Portada"),
+                  InputWidgetDialog(controller: _imagenController,icon: Icons.image, hint: "Url Portada"),
                 ],
               ),
             ),
             actions: [
               TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                   child: Text(
                     "Cancelar",
                     style: TextStyle(color: Colors.black38),
                   )),
               TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    int id = misLibros.length + 1;
+                    Libro data = new Libro(
+                      //id: id  ,
+                      autor: _autorController.text,
+                      descripcionLibro: _descripcionController.text,
+                      urlmage: _imagenController.text,
+                    );
+                    DBGlobalManager.db.insertLibro(data);
+                    Navigator.pop(context);
+                    getData();
+                  },
                   child: Text(
                     "Aceptar",
                     style: TextStyle(fontWeight: FontWeight.bold),
@@ -78,19 +97,83 @@ class _HomePageState extends State<HomePage> {
           );
         });
   }
+  showAddModalEdit(BuildContext context) {
+    //metodo Alerta
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Editar Libro"),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24.0),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SvgPicture.asset(
+                    'assets/image/add.svg',
+                    height: 120,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  InputWidgetDialog(controller: _descripcionController,icon: Icons.book, hint: "Libro"),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  InputWidgetDialog(controller: _autorController,icon: Icons.person, hint: "Autor"),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  InputWidgetDialog(controller: _imagenController,icon: Icons.image, hint: "Url Portada"),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    "Cancelar",
+                    style: TextStyle(color: Colors.black38),
+                  )),
+              TextButton(
+                  onPressed: () {
+                    //int id = misLibros.length + 1;
+                    Libro data = new Libro(
+                      //id: id  ,
+                      autor: _autorController.text,
+                      descripcionLibro: _descripcionController.text,
+                      urlmage: _imagenController.text,
+                    );
+                    DBGlobalManager.db.insertLibro(data);
+                    Navigator.pop(context);
+                    getData();
+                  },
+                  child: Text(
+                    "Editar",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  )),
+            ],
+          );
+        });
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: ()async {
-          //showAddModal(context);
-          Libro data = new Libro( //clase para pasar parametros a metodos CRUD
-              id: 5,
-              descripcionLibro: "Tradiciones Peruanas2",
-              autor: "Ricardo Palma2",
-              urlmage:"https://pub.utp.edu.pe/sites/default/files/obra-teatro2.png");
-          DBGlobalManager.db.insertLibro(data);
+          showAddModal(context);
+          // Libro data = new Libro( //clase para pasar parametros a metodos CRUD
+          //     id: 5,
+          //     descripcionLibro: "Tradiciones Peruanas2",
+          //     autor: "Ricardo Palma2",
+          //     urlmage:"https://pub.utp.edu.pe/sites/default/files/obra-teatro2.png");
+          // DBGlobalManager.db.insertLibro(data);
 
           //print(await DBGlobalManager.db.getAllLibros());
           //DBGlobalManager.db.insertLibroRow();
@@ -101,7 +184,7 @@ class _HomePageState extends State<HomePage> {
           //DBGlobalManager.db.updateLibros();
           //DBGlobalManager.db.deleteLibros();
           //DBGlobalManager.db.updateLibros();
-          print(await DBGlobalManager.db.getAllLibros());
+          //print(await DBGlobalManager.db.getAllLibros());
         },
         child: Icon(Icons.add),
         backgroundColor: Color(0xff212121),
@@ -120,13 +203,21 @@ class _HomePageState extends State<HomePage> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
+              Text(
+                "Cantidad Libros : ${misLibros.length}",
+                style: TextStyle(
+                  color: Color(0xff212121),
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               SizedBox(
                 height: 20.0,
               ),
               // DissmissibleItemWidget(),
               // DissmissibleItemWidget(),
               ListView.builder(  //este Widget maneja todos lo libros que llega de getAllLibros
-                primary: true,
+                physics: ScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: misLibros.length,
                 itemBuilder: (BuildContext context, int index){
@@ -134,6 +225,14 @@ class _HomePageState extends State<HomePage> {
                     title: misLibros[index]["DescripcionLibro"],
                     autor: misLibros[index]["Autor"],
                     url: misLibros[index]["urlImage"],
+                    onDelete: ()async{
+                      await DBGlobalManager.db.deleteLibros(misLibros[index]["Id"]);
+                      getData();
+                    },
+                    onEdit: ()async{
+                     await DBGlobalManager.db.updateLibros(misLibros[index]["Id"]);
+                     getData();
+                    },
                   );
                 },
               ),

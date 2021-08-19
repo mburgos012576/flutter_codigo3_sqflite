@@ -34,7 +34,7 @@ class DBGlobalManager {
       onCreate: (Database db, int version) async {
         //crear bd
         await db.execute(
-            "CREATE TABLE Libro(Id INTEGER PRIMARY KEY, DescripcionLibro TEXT, Autor TEXT, urlImage TEXT )");
+            "CREATE TABLE Libro(Id INTEGER PRIMARY KEY AUTOINCREMENT, DescripcionLibro TEXT, Autor TEXT, urlImage TEXT )");
       },
     );
   }
@@ -88,12 +88,18 @@ class DBGlobalManager {
     print(resp);
   }
 
-  updateLibros() async {
+  Future<int> updateLibros(Libro data) async {
     final db = await getDatabase;
-    final resp = await db!.update(
-        "Libro", {"DescripcionLibro": 'La fiesta del chivo2'},
-        where: "Id=4");
-    print(resp);
+    final int resp = await db!.update(
+        "Libro",
+        {
+          "DescripcionLibro": data.descripcionLibro,
+          "Autor": data.autor,
+          "urlImage": data.urlmage
+        },
+        where: "Id = ${data.id}");
+    //print(resp);
+    return resp;
   }
 
   //Delete Registros de tabla
@@ -103,9 +109,11 @@ class DBGlobalManager {
     print(resp);
   }
 
-  deleteLibros() async {
+  Future<int> deleteLibros(int index) async {
     final db = await getDatabase;
-    final resp = await db!.delete("Libro");
-    print(resp);
+    final int resp = await db!.delete("Libro", where: "id = $index");
+    //print(resp);
+
+    return resp;
   }
 }
