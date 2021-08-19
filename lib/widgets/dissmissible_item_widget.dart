@@ -1,10 +1,12 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_codigo3_sqflite/db/db_global.dart';
 
 class DissmissibleItemWidget extends StatelessWidget {
-  const DissmissibleItemWidget({
-    Key? key,
-  }) : super(key: key);
+  String title;
+  String autor;
+  String url;
+  DissmissibleItemWidget({required this.title,required this.autor, required this.url});
 
   @override
   Widget build(BuildContext context) {
@@ -27,18 +29,18 @@ class DissmissibleItemWidget extends StatelessWidget {
         leading: Container(
           width: 50.0,
           child: Image.network(
-            "https://imagessl7.casadellibro.com/a/l/t7/77/9788420470177.jpg",
+            this.url,//"https://imagessl7.casadellibro.com/a/l/t7/77/9788420470177.jpg",
             fit: BoxFit.cover,
           ),
         ),
         title: Text(
-          "La Fiesta del Chivo",
+          this.title,
           style: TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: 17.0,
           ),
         ),
-        subtitle: Text("Mario Vargas Llosa"),
+        subtitle: Text(this.autor),//Text("Mario Vargas Llosa"),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

@@ -47,10 +47,10 @@ class DBGlobalManager {
   }
 
   //otra forma de listar tabla
-  Future<List> getAllLibros() async {
+  Future<List<Map<String, dynamic>>> getAllLibros() async {
     final db = await getDatabase;
-    final resp = await db!.query("Libro");
-    print(resp);
+    final List<Map<String, dynamic>> resp = await db!.query("Libro");
+    //print(resp);
     return resp; //?? [];  //si es nulo muestra lista vacia
   }
 
@@ -105,7 +105,7 @@ class DBGlobalManager {
 
   deleteLibros() async {
     final db = await getDatabase;
-    final resp = await db!.delete("Libro", where: "Id=4");
+    final resp = await db!.delete("Libro");
     print(resp);
   }
 }

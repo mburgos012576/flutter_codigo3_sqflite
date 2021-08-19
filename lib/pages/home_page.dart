@@ -11,10 +11,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Map<String,dynamic>> misLibros = []; //variable donde alojaremos el resultado de getAllLibros del metodo(getData)
+
   @override
   initState() {
     super.initState();
     DBGlobalManager.db;
+    getData();
+  }
+  getData()async{
+    //misLibros = await DBGlobalManager.db.getAllLibros();
+    //o esta
+    DBGlobalManager.db.getAllLibros().then((value){
+      misLibros=value;
+    });
+    print(misLibros);
   }
 
   showAddModal(BuildContext context) {
@@ -74,14 +85,14 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: ()async {
           //showAddModal(context);
-          // Libro data = new Libro( //clase para pasar parametros a metodos CRUD
-          //     id: 12,
-          //     descripcionLibro: "Goky",
-          //     autor: "Akira Torillama",
-          //     urlmage:"https://imagessl7.casadellibro.com/a/l/t7/77/9788420470177.jpg");
-          // DBGlobalManager.db.insertLibro(data);
+          Libro data = new Libro( //clase para pasar parametros a metodos CRUD
+              id: 5,
+              descripcionLibro: "Tradiciones Peruanas2",
+              autor: "Ricardo Palma2",
+              urlmage:"https://pub.utp.edu.pe/sites/default/files/obra-teatro2.png");
+          DBGlobalManager.db.insertLibro(data);
 
-          print(await DBGlobalManager.db.getAllLibros());
+          //print(await DBGlobalManager.db.getAllLibros());
           //DBGlobalManager.db.insertLibroRow();
           //DBGlobalManager.db.getAllLibrosRaw();
           //DBGlobalManager.db.getAllLibros();
@@ -90,7 +101,7 @@ class _HomePageState extends State<HomePage> {
           //DBGlobalManager.db.updateLibros();
           //DBGlobalManager.db.deleteLibros();
           //DBGlobalManager.db.updateLibros();
-          //DBGlobalManager.db.getAllLibros();
+          print(await DBGlobalManager.db.getAllLibros());
         },
         child: Icon(Icons.add),
         backgroundColor: Color(0xff212121),
@@ -112,8 +123,20 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: 20.0,
               ),
-              DissmissibleItemWidget(),
-              DissmissibleItemWidget(),
+              // DissmissibleItemWidget(),
+              // DissmissibleItemWidget(),
+              ListView.builder(  //este Widget maneja todos lo libros que llega de getAllLibros
+                primary: true,
+                shrinkWrap: true,
+                itemCount: misLibros.length,
+                itemBuilder: (BuildContext context, int index){
+                  return DissmissibleItemWidget(
+                    title: misLibros[index]["DescripcionLibro"],
+                    autor: misLibros[index]["Autor"],
+                    url: misLibros[index]["urlImage"],
+                  );
+                },
+              ),
             ],
           ),
         ),
